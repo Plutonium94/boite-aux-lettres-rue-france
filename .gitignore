@@ -1,0 +1,9 @@
+*.log
+target
+
+BigRWS.java
+EssaiService.java
+Department.java
+Employee.java
+*.sh
+*.txt

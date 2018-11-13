@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<title>Boite aux Lettres en France</title>
+</head>
+<body>
+
+	<header>
+		<h1>Boite aux Lettres en France</h1>
+	</header>
+
+	<main>
+
+		<p>Il y a <span id="totalBalCount"></span> boîte aux lettres de rue en France</p>
+
+
+		<div id="alphabetGrid"></div>
+	</main>
+
+	<script>
+
+		document.addEventListener('DOMContentLoaded', (e)=> {
+			fetchBoiteAuxLettres();
+			buildAlphabetGrid();
+		});
+
+		function fetchBoiteAuxLettres() {
+			fetch('/bal/rest/bal/count').then((res)=> {
+				return res.json();
+			}).then((res)=> {
+				document.getElementById('totalBalCount').innerHTML = JSON.stringify(res);
+			});
+		}
+
+		function buildAlphabetGrid() {
+			let alphabetGrid = document.getElementById('alphabetGrid');
+			console.log(alphabetGrid);
+			for(let c = 'a'; c.charCodeAt(0) <= 'z'.charCodeAt(0); c = String.fromCharCode(c.charCodeAt(0) + 1)) {
+				alphabetGrid.innerHTML += '<button type="button" class="alphabetButton">'+c+'</button>';
+			}
+			document.querySelectorAll('.alphabetButton').forEach((alphabetButton, ind) => {
+				alphabetButton.addEventListener('click', (e)=> {
+					let c = e.target.textContent;
+					fetch('/bal/rest/bal/commune/'+c).then((res)=>{
+						return res.json();
+					}).then((res)=> {
+						console.log(res);
+					});
+				});
+			});
+		}
+
+
+		
+	</script>
+
+
+</body>
+</html>
