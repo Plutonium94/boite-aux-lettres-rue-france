@@ -94,6 +94,12 @@ public class BalRWS {
 	}
 
 	@GET
+	@Path("/departement/count") 
+	public Long getAllDepartementCount() {
+		return bm.findAllDepartementCount();
+	}
+
+	@GET
 	@Path("/commune/{firstLetter}")
 	public List<String> getCommuneByFirstLetter(@PathParam("firstLetter") char firstLetter) {
 		return bm.findCommuneByFirstLetter(firstLetter);

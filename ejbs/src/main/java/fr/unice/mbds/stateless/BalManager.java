@@ -44,7 +44,12 @@ public class BalManager {
 	}
 
 	public Long findAllCommuneCount() {
-		return em.createQuery("Select count(bal.commune) from BoiteAuxLettres bal group by bal.commune", Long.class)
+		return em.createQuery("Select count(distinct bal.commune) from BoiteAuxLettres bal", Long.class)
+			.getSingleResult();
+	}
+
+	public Long findAllDepartementCount() {
+		return em.createQuery("Select count(distinct substring(bal.codePostale, 0, 2)) from BoiteAuxLettres bal ", Long.class)
 			.getSingleResult();
 	}
 
