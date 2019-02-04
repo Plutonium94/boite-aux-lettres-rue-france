@@ -36,7 +36,7 @@ public class BalRWS {
 
 	@GET
 	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	@Path("/")
+	@Path("/all")
 	public List<BoiteAuxLettres> getAllBals() {
 		// return BoiteAuxLettres.getSampleBALs();
 		return bm.findAllBal();
@@ -100,9 +100,27 @@ public class BalRWS {
 	}
 
 	@GET
-	@Path("/commune/{firstLetter}")
+	@Path("/commune/{firstLetter: [a-zA-Z]}")
 	public List<String> getCommuneByFirstLetter(@PathParam("firstLetter") char firstLetter) {
 		return bm.findCommuneByFirstLetter(firstLetter);
+	}
+
+	@GET
+	@Path("/commune/{firstLetter: [a-zA-Z]}/{start}/{num}")
+	public List<String> getCommuneByFirstLetter(@PathParam("firstLetter") char firstLetter, @PathParam("start") int start, @PathParam("num") int num) {
+		return bm.findCommuneByFirstLetter(firstLetter, start, num);
+	}
+
+	@GET
+	@Path("/commune/{commune: [a-zA-Z][^/][^/]+}")
+	public List<BoiteAuxLettres> getBalByCommune(@PathParam("commune") String commune) {
+		return bm.findBalByCommune(commune);
+	}
+
+	@GET
+	@Path("/commune/{commune: [a-zA-Z][a-zA-Z][^/]*}/{start}/{num}") 
+	public List<BoiteAuxLettres> getBalByCommune(@PathParam("commune") String commune,@PathParam("start") int start,@PathParam("num") int num) {
+		return bm.findBalByCommune(commune, start, num);
 	}
 
 	@GET

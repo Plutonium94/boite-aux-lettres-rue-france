@@ -17,14 +17,45 @@
 
 
 		<div id="alphabetGrid"></div>
+		<div class="flexParent">
+			<aside id="communes">
+
+			</aside>
+			<article>
+
+			</article>
+		</div>
 	</main>
+
+	<style>
+		.flexParent {
+			display: flex;
+			flex-flow: row nowrap;
+			margin-top: 15px;
+		}
+
+		.flexParent article {
+			padding-left: 30px;
+		}
+	</style>
+
+	<template id="villeNameHolder">
+		<button type="click" class="next">Next</button>
+		<button type="click" class="previous">Previous</button>
+
+	</template>
 
 	<script>
 
 		document.addEventListener('DOMContentLoaded', (e)=> {
 			fetchBoiteAuxLettres();
 			buildAlphabetGrid();
+			villeNameHolderElementSetup();
 		});
+
+		function villeNameHolderElementSetup() {
+
+		}
 
 		function fetchBoiteAuxLettres() {
 			fetch('/bal/rest/bal/count').then((res)=> {
@@ -36,21 +67,81 @@
 
 		function buildAlphabetGrid() {
 			let alphabetGrid = document.getElementById('alphabetGrid');
-			console.log(alphabetGrid);
 			for(let c = 'a'; c.charCodeAt(0) <= 'z'.charCodeAt(0); c = String.fromCharCode(c.charCodeAt(0) + 1)) {
 				alphabetGrid.innerHTML += '<button type="button" class="alphabetButton">'+c+'</button>';
 			}
 			document.querySelectorAll('.alphabetButton').forEach((alphabetButton, ind) => {
 				alphabetButton.addEventListener('click', (e)=> {
 					let c = e.target.textContent;
-					fetch('/bal/rest/bal/commune/'+c).then((res)=>{
+					fetchCommuneByBatch(c, 0, 50);
+				});
+			});
+		}
+
+		function fetchCommuneByBatch(firstLetter, start, max) {
+			fetch('/bal/rest/bal/commune/'+firstLetter+'/' + start + '/' + max).then((res)=>{
+				return res.json();
+			}).then((res)=> {
+				let aside = document.getElementById('communes');
+				aside.innerHTML = '';
+				let prev = start - max;
+				let next = start + max;
+				if(prev > 0) {
+					aside.innerHTML = '<button type="button" class="prev" data-start="'+prev+'" data-firstLetter="'+firstLetter+'">&lt;</button>';
+				}
+				aside.innerHTML += '<button type="button" class="next" data-start="'+next+ '" data-firstLetter="'+firstLetter+'">&gt;</button>';
+				for(let c of res) {
+					aside.innerHTML += '<h4 class="commune">' + c + '</h4>';
+				}
+
+				console.log(res);
+				communeClick();
+				prevNextButtonSetup();
+			});
+	
+		}
+
+		function prevNextButtonSetup() {
+			let prev = document.querySelector('button.prev');
+			if(prev) {
+				prev.addEventListener('click' , (e)=>{
+					let start = +prev.getAttribute('data-start');
+					let firstLetter = prev.getAttribute('data-firstLetter');
+					fetchCommuneByBatch(firstLetter, start, 50);
+				});
+			}
+			let next = document.querySelector('button.next');
+			if(next) {
+				next.addEventListener('click', (e)=>{
+					let start = +next.getAttribute('data-start');
+					let firstLetter = next.getAttribute('data-firstLetter');
+
+					fetchCommuneByBatch(firstLetter, start, 50);
+				});
+			}
+		}
+
+		function communeClick() {
+			let article = document.querySelector('article');
+			article.innerHTML ='';
+			document.querySelectorAll('aside h4.commune').forEach((c,i)=>{
+				c.addEventListener('click',(evt)=>{
+					console.log('clicked');
+					let commune = evt.target.innerHTML;
+					console.log(commune);
+					fetch('/bal/rest/bal/commune/'+commune).then((res)=>{
 						return res.json();
-					}).then((res)=> {
-						console.log(res);
+					}).then((res)=>{
+						article.innerHTML = '<h3>' + commune + '</h3>';
+						for(let bal of res) {
+							article.innerHTML += '<div class="bal">'+ bal.lbVoie+'</div>';
+						}
 					});
 				});
 			});
 		}
+
+
 
 
 		

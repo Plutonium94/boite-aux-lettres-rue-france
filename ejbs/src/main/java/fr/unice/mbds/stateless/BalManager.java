@@ -32,6 +32,14 @@ public class BalManager {
 			.getResultList();
 	}
 
+	public List<BoiteAuxLettres> findBalByCommune(String commune, int startPosition, int maxResult) {
+		return em.createQuery("Select bal from BoiteAuxLettres bal where bal.commune = :commune", BoiteAuxLettres.class)
+			.setParameter("commune",commune)
+			.setFirstResult(startPosition)
+			.setMaxResults(maxResult)
+			.getResultList();
+	}
+
 	public Long findBalCountByCommune(String commune) {
 		return em.createQuery("Select count(bal.id) from BoiteAuxLettres bal where commune like :commune", Long.class)
 			.setParameter("commune", commune)
@@ -69,6 +77,14 @@ public class BalManager {
 		return em.createQuery("Select distinct bal.commune from BoiteAuxLettres bal where substring(bal.commune,1,1)=:scap or substring(bal.commune,1,1) = :ssmall", String.class)
 			.setParameter("scap", s1)
 			.setParameter("ssmall", s2)
+			.getResultList();
+	}
+
+	public List<String> findCommuneByFirstLetter(char firstLetter, int startPosition, int maxResult) {
+		return em.createQuery("Select distinct bal.commune from BoiteAuxLettres bal where upper(substring(bal.commune,1,1)) = :firstCapLetter", String.class)
+			.setParameter("firstCapLetter", "" + Character.toUpperCase(firstLetter))
+			.setFirstResult(startPosition)
+			.setMaxResults(maxResult)
 			.getResultList();
 	}
 
