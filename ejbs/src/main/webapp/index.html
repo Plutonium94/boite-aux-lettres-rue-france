@@ -13,8 +13,10 @@
 
 	<main>
 
-		<p>Il y a <span id="totalBalCount"></span> boîte aux lettres de rue en France</p>
+		<p class="annonce">Il y a <span id="totalBalCount"></span> boîte aux lettres de rue en France</p>
 
+
+		<p class="indication">Cliquez sur une lettre pour accéder aux villes qui commencent par cette lettre.</p>
 
 		<div id="alphabetGrid"></div>
 		<div class="flexParent">
@@ -44,6 +46,14 @@
 		<button type="click" class="previous">Previous</button>
 
 	</template>
+
+	<link rel="stylesheet" href="./style.css">
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+	   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+	   crossorigin=""/>
+
+
 
 	<script>
 
@@ -126,27 +136,37 @@
 			article.innerHTML ='';
 			document.querySelectorAll('aside h4.commune').forEach((c,i)=>{
 				c.addEventListener('click',(evt)=>{
-					console.log('clicked');
 					let commune = evt.target.innerHTML;
 					console.log(commune);
 					fetch('/bal/rest/bal/commune/'+commune).then((res)=>{
 						return res.json();
 					}).then((res)=>{
 						article.innerHTML = '<h3>' + commune + '</h3>';
+						article.innerHTML = '<p>Il y a ' + ((res.length == 1)?'une bôite':(res.length + ' bôites')) + ' aux lettres de rue à ' + commune + '</p>';
 						for(let bal of res) {
-							article.innerHTML += '<div class="bal">'+ bal.lbVoie+'</div>';
+							article.innerHTML += '<div class="bal">' + bal.vaNoVoie + ' '+ bal.lbVoie+'</div>';
 						}
+						article.innerHTML += '<div id="mapDiv"></div>';
+						redrawMap(res);
 					});
 				});
 			});
 		}
 
+		function redrawMap(balList) {
+			let myMap = L.map('mapDiv').setView([51.505, -0.09], 13);
+			for(let bal of balList) {
+			}
+		}
 
 
 
 		
 	</script>
 
+	<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+	  integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+	  crossorigin=""></script>
 
 </body>
 </html>

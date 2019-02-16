@@ -1,0 +1,49 @@
+/* reset */
+* {
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	background: none;
+}
+
+.alphabetButton {
+	clip-path: circle(50%);
+	background-color: #ffff1a;
+	color: rgb(204,0,0);
+	width:42px;
+	height: 42px;
+	margin-left:6px;
+	padding:3px;
+	cursor: pointer;
+}
+
+.alphabetButton:hover {
+	color: #ffff1a;
+	background-color: rgb(204,0,0);
+}
+
+h4.commune {
+	background-color: #ffff1a;
+	margin-bottom: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 5px ;
+	padding-right: 5px;
+	cursor: pointer;
+}
+
+p {
+	margin: 14px;
+}
+
+article .bal {
+	margin: 14px;
+}
+
+.indication {
+	font-style: 
+}
+
+#mapDiv {
+	height: 600px;
+}

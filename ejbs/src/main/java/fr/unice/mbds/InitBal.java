@@ -28,7 +28,6 @@ public class InitBal implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent ce) {
-		System.out.println("abc started");
 		InputStream is = ce.getServletContext().getResourceAsStream(FILE_LOCATION);
 		if(is == null) {
 			return;
@@ -56,6 +55,9 @@ public class InitBal implements ServletContextListener {
 				} catch(NumberFormatException nfe) {
 
 				}
+				bal.setLatitude(latitude);
+				bal.setLongitude(longitude);
+
 				balList.add(bal);
 			}
 			br.close();
@@ -65,7 +67,6 @@ public class InitBal implements ServletContextListener {
 		for(BoiteAuxLettres bal : balList) {
 			bm.save(bal);
 		}
-		System.out.println("abc ended");
 
 	}
 

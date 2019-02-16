@@ -71,7 +71,7 @@ public class BoiteAuxLettres implements Serializable {
 		return longitude;
 	}
 
-	public void setLongitude() {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
