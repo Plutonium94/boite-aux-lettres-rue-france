@@ -142,7 +142,7 @@
 						return res.json();
 					}).then((res)=>{
 						article.innerHTML = '<h3>' + commune + '</h3>';
-						article.innerHTML = '<p>Il y a ' + ((res.length == 1)?'une bôite':(res.length + ' bôites')) + ' aux lettres de rue à ' + commune + '</p>';
+						article.innerHTML += '<p>Il y a ' + ((res.length == 1)?'une bôite':(res.length + ' bôites')) + ' aux lettres de rue à ' + commune + '</p>';
 						for(let bal of res) {
 							article.innerHTML += '<div class="bal">' + bal.vaNoVoie + ' '+ bal.lbVoie+'</div>';
 						}
@@ -154,8 +154,18 @@
 		}
 
 		function redrawMap(balList) {
-			let myMap = L.map('mapDiv').setView([51.505, -0.09], 13);
+
+			console.log(balList);
+			let myMap = L.map('mapDiv').setView([balList[0].latitude, balList[0].longitude], 13);
+			console.log('aaaaa');
+			let tl = L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+			    
+			});
+
+			tl.addTo(myMap);
 			for(let bal of balList) {
+				L.marker([bal.latitude,bal.longitude]).addTo(myMap);
 			}
 		}
 
